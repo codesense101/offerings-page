@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Offering</title>
+
+<style>
+body {
+  margin: 0;
+  overflow: hidden;
+  background: black;
+  font-family: sans-serif;
+}
+
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Background Image FIX */
+.bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Dark overlay for readability */
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.35);
+}
+
+/* Offerings */
+.offerings {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  z-index: 2;
+}
+
+.flower-btn {
+  background: rgba(255,255,255,0.15);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 18px;
+  font-size: 12px;
+  border: 1px solid rgba(255,255,255,0.3);
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+}
+
+/* Flower animation */
+.flower {
+  position: absolute;
+  font-size: 18px;
+  animation: fall 2s ease-out forwards;
+  z-index: 3;
+}
+
+@keyframes fall {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(75vh); opacity: 0.9; }
+}
+
+/* CTA */
+.cta {
+  position: absolute;
+  bottom: 90px;
+  width: 100%;
+  text-align: center;
+  opacity: 0;
+  transition: 1s;
+  z-index: 2;
+}
+
+.cta a {
+  color: white;
+  text-decoration: none;
+  padding: 12px 18px;
+  border: 1px solid white;
+  border-radius: 25px;
+}
+
+.show {
+  opacity: 1;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- ✅ WORKING IMAGE -->
+  <img 
+    src="https://static.sadhguru.org/d/46272/1633188093-1633188092044.jpg"
+    class="bg"
+  />
+
+  <div class="overlay"></div>
+
+  <!-- 19 Names with individual links -->
+  <div class="offerings">
+
+    <div class="flower-btn" onclick="offer('https://link1.com')">🌼 Amrutha</div>
+    <div class="flower-btn" onclick="offer('https://link2.com')">🌸 Bhaavya</div>
+    <div class="flower-btn" onclick="offer('https://link3.com')">🌺 Himanshu</div>
+    <div class="flower-btn" onclick="offer('https://link4.com')">🌼 Krishna</div>
+    <div class="flower-btn" onclick="offer('https://link5.com')">🌸 Nitesh</div>
+    <div class="flower-btn" onclick="offer('https://link6.com')">🌺 Prajwal</div>
+    <div class="flower-btn" onclick="offer('https://link7.com')">🌼 Praveen</div>
+    <div class="flower-btn" onclick="offer('https://link8.com')">🌸 Rohan</div>
+    <div class="flower-btn" onclick="offer('https://link9.com')">🌺 Sengottuvel</div>
+    <div class="flower-btn" onclick="offer('https://link10.com')">🌼 Shiva</div>
+    <div class="flower-btn" onclick="offer('https://link11.com')">🌸 Shreesha</div>
+    <div class="flower-btn" onclick="offer('https://link12.com')">🌺 Smitha</div>
+    <div class="flower-btn" onclick="offer('https://link13.com')">🌼 Sneha</div>
+    <div class="flower-btn" onclick="offer('https://link14.com')">🌸 Subhasree</div>
+    <div class="flower-btn" onclick="offer('https://link15.com')">🌺 Suhruth</div>
+    <div class="flower-btn" onclick="offer('https://link16.com')">🌼 Sumithra</div>
+    <div class="flower-btn" onclick="offer('https://link17.com')">🌸 Sendhil</div>
+    <div class="flower-btn" onclick="offer('https://link18.com')">🌺 Gaurav</div>
+    <div class="flower-btn" onclick="offer('https://link19.com')">🌼 Tushar</div>
+
+  </div>
+
+</div>
+
+<script>
+function offer(link) {
+
+  // Flower shower
+  for (let i = 0; i < 30; i++) {
+    let f = document.createElement("div");
+    f.className = "flower";
+    f.innerHTML = "🌸";
+
+    f.style.left = Math.random() * window.innerWidth + "px";
+    f.style.top = "-20px";
+
+    document.body.appendChild(f);
+
+    setTimeout(() => f.remove(), 2000);
+  }
+
+  // Redirect after animation
+  setTimeout(() => {
+    window.location.href = link;
+  }, 1800);
+}
+</script>
+
+</body>
+</html>

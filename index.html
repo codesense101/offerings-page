@@ -44,30 +44,45 @@ body {
   gap: 8px;
   padding: 10px;
   z-index: 2;
+  transition: opacity 0.6s ease;
 }
 
 .flower-btn {
-  background: rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.12);
   color: white;
-  padding: 8px 12px;
-  border-radius: 18px;
-  font-size: 12px;
-  border: 1px solid rgba(255,255,255,0.3);
+  padding: 10px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  border: 1px solid rgba(255,255,255,0.25);
   cursor: pointer;
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(10px);
+  transition: transform 0.2s ease, background 0.2s;
 }
 
-/* Flower animation */
+.flower-btn:hover {
+  transform: scale(1.05);
+  background: rgba(255,255,255,0.2);
+}
+
+/* SVG Flower */
 .flower {
   position: absolute;
-  font-size: 18px;
-  animation: fall 2.5s ease-out forwards;
+  width: 16px;
+  height: 16px;
+  opacity: 0.9;
   z-index: 3;
+  animation: fall linear forwards;
 }
 
 @keyframes fall {
-  0% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(80vh); opacity: 0.9; }
+  0% {
+    transform: translateY(-20px) translateX(0px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(85vh) translateX(40px) rotate(180deg);
+    opacity: 0.8;
+  }
 }
 
 /* CTA */
@@ -100,19 +115,11 @@ body {
 
 <div class="container">
 
-  <!-- Image -->
-  <!-- <img 
-    src="https://static.sadhguru.org/d/46272/1633188093-1633188092044.jpg"
-    class="bg"
-  /> -->
   <img src="sg2.jpg" class="bg"/>
-
   <div class="overlay"></div>
 
-  <!-- Dynamic offerings -->
   <div class="offerings" id="offerings"></div>
 
-  <!-- CTA -->
   <div class="cta" id="cta">
     <button onclick="goToLink()">Continue Your Offering →</button>
   </div>
@@ -124,40 +131,58 @@ body {
 <script>
 let selectedLink = "";
 
-// Generate buttons dynamically
 const container = document.getElementById("offerings");
 
+// Create buttons
 offeringsData.forEach(item => {
   const btn = document.createElement("div");
   btn.className = "flower-btn";
-  btn.innerText = "🌼 " + item.name;
+  btn.innerText = item.name;
 
   btn.onclick = () => offer(item.link);
 
   container.appendChild(btn);
 });
 
+// Create SVG flower
+function createFlower(xStart) {
+  const flower = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  flower.setAttribute("viewBox", "0 0 24 24");
+  flower.classList.add("flower");
+
+  flower.innerHTML = `
+    <path d="M12 2 C14 6, 18 6, 20 10 C18 14, 14 14, 12 18 C10 14, 6 14, 4 10 C6 6, 10 6, 12 2 Z"
+    fill="rgba(255,182,193,0.9)" />
+  `;
+
+  flower.style.left = xStart + "px";
+  flower.style.animationDuration = (2 + Math.random()) + "s";
+
+  document.body.appendChild(flower);
+
+  setTimeout(() => flower.remove(), 3000);
+}
+
 function offer(link) {
   selectedLink = link;
 
-  // More flowers (increased)
-  for (let i = 0; i < 60; i++) {
-    let f = document.createElement("div");
-    f.className = "flower";
-    f.innerHTML = "🌸";
+  // 🌑 Fade out names
+  container.style.opacity = "0";
+  container.style.pointerEvents = "none";
 
-    f.style.left = Math.random() * window.innerWidth + "px";
-    f.style.top = "-20px";
+  // 🌸 Continuous flower shower
+  let count = 0;
+  const interval = setInterval(() => {
+    createFlower(Math.random() * window.innerWidth);
+    count++;
 
-    document.body.appendChild(f);
+    if (count > 100) clearInterval(interval);
+  }, 20); // density control
 
-    setTimeout(() => f.remove(), 2500);
-  }
-
-  // Show CTA
+  // CTA
   setTimeout(() => {
     document.getElementById("cta").classList.add("show");
-  }, 2000);
+  }, 2200);
 }
 
 function goToLink() {

@@ -19,7 +19,6 @@ body {
   height: 100vh;
 }
 
-/* Background Image FIX */
 .bg {
   position: absolute;
   width: 100%;
@@ -27,7 +26,6 @@ body {
   object-fit: cover;
 }
 
-/* Dark overlay for readability */
 .overlay {
   position: absolute;
   width: 100%;
@@ -63,13 +61,13 @@ body {
 .flower {
   position: absolute;
   font-size: 18px;
-  animation: fall 2s ease-out forwards;
+  animation: fall 2.5s ease-out forwards;
   z-index: 3;
 }
 
 @keyframes fall {
   0% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(75vh); opacity: 0.9; }
+  100% { transform: translateY(80vh); opacity: 0.9; }
 }
 
 /* CTA */
@@ -83,12 +81,13 @@ body {
   z-index: 2;
 }
 
-.cta a {
+.cta button {
+  background: rgba(255,255,255,0.2);
   color: white;
-  text-decoration: none;
-  padding: 12px 18px;
-  border: 1px solid white;
+  padding: 12px 20px;
   border-radius: 25px;
+  border: 1px solid white;
+  cursor: pointer;
 }
 
 .show {
@@ -101,7 +100,7 @@ body {
 
 <div class="container">
 
-  <!-- ✅ WORKING IMAGE -->
+  <!-- Image -->
   <img 
     src="https://static.sadhguru.org/d/46272/1633188093-1633188092044.jpg"
     class="bg"
@@ -109,38 +108,39 @@ body {
 
   <div class="overlay"></div>
 
-  <!-- 19 Names with individual links -->
-  <div class="offerings">
+  <!-- Dynamic offerings -->
+  <div class="offerings" id="offerings"></div>
 
-    <div class="flower-btn" onclick="offer('https://link1.com')">🌼 Amrutha</div>
-    <div class="flower-btn" onclick="offer('https://link2.com')">🌸 Bhaavya</div>
-    <div class="flower-btn" onclick="offer('https://link3.com')">🌺 Himanshu</div>
-    <div class="flower-btn" onclick="offer('https://link4.com')">🌼 Krishna</div>
-    <div class="flower-btn" onclick="offer('https://link5.com')">🌸 Nitesh</div>
-    <div class="flower-btn" onclick="offer('https://link6.com')">🌺 Prajwal</div>
-    <div class="flower-btn" onclick="offer('https://link7.com')">🌼 Praveen</div>
-    <div class="flower-btn" onclick="offer('https://link8.com')">🌸 Rohan</div>
-    <div class="flower-btn" onclick="offer('https://link9.com')">🌺 Sengottuvel</div>
-    <div class="flower-btn" onclick="offer('https://link10.com')">🌼 Shiva</div>
-    <div class="flower-btn" onclick="offer('https://link11.com')">🌸 Shreesha</div>
-    <div class="flower-btn" onclick="offer('https://link12.com')">🌺 Smitha</div>
-    <div class="flower-btn" onclick="offer('https://link13.com')">🌼 Sneha</div>
-    <div class="flower-btn" onclick="offer('https://link14.com')">🌸 Subhasree</div>
-    <div class="flower-btn" onclick="offer('https://link15.com')">🌺 Suhruth</div>
-    <div class="flower-btn" onclick="offer('https://link16.com')">🌼 Sumithra</div>
-    <div class="flower-btn" onclick="offer('https://link17.com')">🌸 Sendhil</div>
-    <div class="flower-btn" onclick="offer('https://link18.com')">🌺 Gaurav</div>
-    <div class="flower-btn" onclick="offer('https://link19.com')">🌼 Tushar</div>
-
+  <!-- CTA -->
+  <div class="cta" id="cta">
+    <button onclick="goToLink()">Continue Your Offering →</button>
   </div>
 
 </div>
 
-<script>
-function offer(link) {
+<script src="data.js"></script>
 
-  // Flower shower
-  for (let i = 0; i < 30; i++) {
+<script>
+let selectedLink = "";
+
+// Generate buttons dynamically
+const container = document.getElementById("offerings");
+
+offeringsData.forEach(item => {
+  const btn = document.createElement("div");
+  btn.className = "flower-btn";
+  btn.innerText = "🌼 " + item.name;
+
+  btn.onclick = () => offer(item.link);
+
+  container.appendChild(btn);
+});
+
+function offer(link) {
+  selectedLink = link;
+
+  // More flowers (increased)
+  for (let i = 0; i < 60; i++) {
     let f = document.createElement("div");
     f.className = "flower";
     f.innerHTML = "🌸";
@@ -150,13 +150,19 @@ function offer(link) {
 
     document.body.appendChild(f);
 
-    setTimeout(() => f.remove(), 2000);
+    setTimeout(() => f.remove(), 2500);
   }
 
-  // Redirect after animation
+  // Show CTA
   setTimeout(() => {
-    window.location.href = link;
-  }, 1800);
+    document.getElementById("cta").classList.add("show");
+  }, 2000);
+}
+
+function goToLink() {
+  if (selectedLink) {
+    window.location.href = selectedLink;
+  }
 }
 </script>
 

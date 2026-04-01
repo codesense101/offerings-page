@@ -56,33 +56,29 @@ body {
   border: 1px solid rgba(255,255,255,0.25);
   cursor: pointer;
   backdrop-filter: blur(10px);
-  transition: transform 0.2s ease, background 0.2s;
 }
 
-.flower-btn:hover {
-  transform: scale(1.05);
-  background: rgba(255,255,255,0.2);
-}
-
-/* SVG Flower */
+/* Flower */
 .flower {
   position: absolute;
   width: 16px;
   height: 16px;
-  opacity: 0.9;
   z-index: 3;
-  animation: fall linear forwards;
+  pointer-events: none;
 }
 
-@keyframes fall {
-  0% {
-    transform: translateY(-20px) translateX(0px) rotate(0deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(85vh) translateX(40px) rotate(180deg);
-    opacity: 0.8;
-  }
+/* Glow at feet */
+.glow {
+  position: absolute;
+  width: 120px;
+  height: 60px;
+  bottom: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(255,215,120,0.6) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  z-index: 2;
 }
 
 /* CTA */
@@ -118,8 +114,13 @@ body {
   <img src="sg2.jpg" class="bg"/>
   <div class="overlay"></div>
 
+  <!-- glow -->
+  <div class="glow" id="glow"></div>
+
+  <!-- names -->
   <div class="offerings" id="offerings"></div>
 
+  <!-- CTA -->
   <div class="cta" id="cta">
     <button onclick="goToLink()">Continue Your Offering →</button>
   </div>
@@ -130,7 +131,6 @@ body {
 
 <script>
 let selectedLink = "";
-
 const container = document.getElementById("offerings");
 
 // Create buttons
@@ -144,8 +144,8 @@ offeringsData.forEach(item => {
   container.appendChild(btn);
 });
 
-// Create SVG flower
-function createFlower(xStart) {
+// Create flower
+function createFlower(startX) {
   const flower = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   flower.setAttribute("viewBox", "0 0 24 24");
   flower.classList.add("flower");
@@ -155,29 +155,61 @@ function createFlower(xStart) {
     fill="rgba(255,182,193,0.9)" />
   `;
 
-  flower.style.left = xStart + "px";
-  flower.style.animationDuration = (2 + Math.random()) + "s";
+  // start position (bottom)
+  flower.style.left = startX + "px";
+  flower.style.top = (window.innerHeight - 80) + "px";
 
   document.body.appendChild(flower);
 
-  setTimeout(() => flower.remove(), 3000);
+  // target = feet zone
+  const targetX = window.innerWidth / 2 + (Math.random() * 80 - 40);
+  const targetY = window.innerHeight * 0.82;
+
+  // animate curve
+  const duration = 1800 + Math.random() * 400;
+  const startTime = performance.now();
+
+  function animate(time) {
+    const t = (time - startTime) / duration;
+    if (t >= 1) {
+      flower.remove();
+      flashGlow();
+      return;
+    }
+
+    // quadratic curve
+    const x = startX + (targetX - startX) * t;
+    const y = (window.innerHeight - 80) - (t * t * 300);
+
+    flower.style.transform = `translate(${x - startX}px, ${y - (window.innerHeight - 80)}px) rotate(${t * 180}deg)`;
+
+    requestAnimationFrame(animate);
+  }
+
+  requestAnimationFrame(animate);
+}
+
+// glow effect
+function flashGlow() {
+  const glow = document.getElementById("glow");
+  glow.style.opacity = 1;
+  setTimeout(() => glow.style.opacity = 0, 400);
 }
 
 function offer(link) {
   selectedLink = link;
 
-  // 🌑 Fade out names
+  // fade out names
   container.style.opacity = "0";
   container.style.pointerEvents = "none";
 
-  // 🌸 Continuous flower shower
+  // continuous offering flow
   let count = 0;
   const interval = setInterval(() => {
     createFlower(Math.random() * window.innerWidth);
     count++;
-
-    if (count > 100) clearInterval(interval);
-  }, 20); // density control
+    if (count > 60) clearInterval(interval);
+  }, 40);
 
   // CTA
   setTimeout(() => {

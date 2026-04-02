@@ -222,9 +222,14 @@ function offer(link) {
   }, 2600);
 }
 
+// function goToLink() {
+//   if (selectedLink) {
+//     window.location.href = selectedLink;
+//   }
+// }
 function goToLink() {
   if (selectedLink) {
-    window.location.href = selectedLink;
+    window.open(selectedLink, "_blank");
   }
 }
 </script>
